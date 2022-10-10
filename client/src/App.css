@@ -1,5 +1,5 @@
 body {
-  background-color: rgb(169, 206, 255);
+  background-color: #FFFFFF;
   display: flex;
 }
 
@@ -55,7 +55,7 @@ body {
 }
 
 .dashboard-actions {
-  margin-left: 21vw;
+  margin-left: 16vw;
   width: calc(100vw - 21vw);
   height: 100vh;
   display: flex;
@@ -65,35 +65,106 @@ body {
   gap: 2rem;
 }
 
-.sidebar {
-  background-color: white;
+/* Topbar */
+
+.topbar {
+  background-color: #17fba1;
   position: fixed;
+  width: 100vw;
+  height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 5rem 2rem 0;
+}
+
+.logo {
+  color: #FFFFFF;
+  border: white solid 3px;
+  margin: 1rem;
+  width: max(calc(15vw - 2rem), 4ch);
+}
+
+.logo h1 {
+  font-size: clamp(2rem, 3vh, 5rem);
+}
+
+.topbar-content {
+  display: flex;
+  justify-content: space-between;
+  width: 20vw;
+  align-items: baseline;
+}
+
+i {
+  font-size: 2rem;
+}
+
+.topbar-user {
+  display: flex;
+  width: calc(20ch + 2rem);
+  justify-content: space-around;
+}
+
+.topbar-user h3:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.topbar-user h3 {
+  font-size: 1.3rem;
+}
+
+.topbar-user::after {
+  content: "\25bc";
+  cursor: pointer;
+}
+
+.notifications i {
+  font-size: 1.7rem;
+}
+
+.user-dropdown {
+  position: absolute;
+  background-color: #d4d3d333;
+  top: 110%;
+  right: 11rem;
+  width: 15rem;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   border-radius: 0.2rem;
+  padding: 1rem;
+  transition: all 0.5ms;
+}
+
+.user-adropdown-links {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.user-dropdown-link {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  font-weight: bold;
+}
+
+/* Sidebar */
+
+.sidebar {
+  margin-top: 10vh;
+  background-color: #d4d3d333;
+  position: fixed;
   height: 100vh;
-  width: 20vw;
+  width: 15vw;
   display: flex;
   flex-direction: column;
   overflow: auto;
 }
 
-.logo {
-  border: 1px solid;
-  margin: 1rem;
-  overflow: auto;
-  width:max(calc(20vw - 2rem), 4ch);
-}
-
-.logo h1 {
-  font-size: clamp(0.3rem, 3vw, 4rem);
-}
-
-.user-photo img {
-  width: min(10rem, calc(100% - 2rem));
-  overflow: auto;
-}
-
 .sidebar-content {
+  display: flex;
+  flex-direction: column;
   margin: auto;
   left: 0;
   right: 0;
@@ -103,13 +174,35 @@ body {
   width: min(calc(20vw - 2rem), 40ch);
 }
 
-.user-details {
-  width: calc(20vw - 2rem);
+.sidebar-section {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  gap: 0.5rem;
 }
 
-.user-changes button {
-  font-size: clamp(0.6rem, 2vw, 1.2rem);
+.sidebar-category {
+  text-align: left;
+  font-weight: 600;
+  color: gray;
+  font-family: inherit;
+  font-size: 1rem;
+  margin-bottom: -0.2rem;
 }
+
+.nav-button {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-button i {
+  font-size: 1.4rem;
+  width: 1.3rem;
+}
+
+/* Dashboard */
+
 .dashboard-card {
   background-color: white;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;

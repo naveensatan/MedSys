@@ -1,33 +1,62 @@
 import React from "react";
-import { useUser } from "./auth/useUser";
-import { useNavigate } from "react-router";
-import avatar from "../img/user/user.png";
+// import { useState } from "react";
 
 const SideBar = () => {
-	const navigate = useNavigate();
-	const { username, email } = useUser();
+	// const [currentPage, switchPage] = useState("");
+	// const hostUrl = `http://localhost:3001/`;
+
+	// const pages = [`dashboard`, `stocks`, `reports`];
+
+	// console.log(window.location.href);
 
 	return (
-		<>
-			<div className="logo">
-				<h1>MedSys</h1>
+		<div className="sidebar">
+			<div className="sidebar-section">
+				<p className="sidebar-category">NAVIGATION</p>
+				<button className="nav-button btn btn-light">
+					<i className="fa-solid fa-gauge-high"></i>
+					<span>Dashboard</span>
+				</button>
+				<button className="nav-button btn btn-light">
+					<i className="fa-solid fa-prescription-bottle-medical"></i>
+					<span>Stocks</span>
+				</button>
+				<button className="nav-button btn btn-light">
+					<i className="fa-solid fa-microscope"></i>
+					<span>Reports</span>
+				</button>
 			</div>
-			<div className="sidebar-content">
-				<div className="user-photo">
-					<img src={avatar} alt="user avatar" />
-				</div>
-				<div className="user-details">
-					<h3 className="user-details-username">{username}</h3>
-					<p className="user-details-email">{email}</p>
-				</div>
-				<div className="user-changes btn-group-vertical">
-					<button className="btn btn-primary">Settings</button>
-					<button className="btn btn-danger" onClick={() => navigate("/login")}>
-						Log Out
-					</button>
-				</div>
+			<div className="sidebar-section">
+				<p className="sidebar-category">DISPENSARY</p>
+				<button className="nav-button btn btn-light">
+					<i className="fa-solid fa-prescription"></i>
+					<span>Prescription</span>
+				</button>
+				<button className="nav-button btn btn-light">
+					<i className="fa-solid fa-syringe"></i>
+					<span>Pathology</span>
+				</button>
+				<button className="nav-button btn btn-light">
+					<i className="fa-solid fa-stamp"></i>
+					<span>Certificates</span>
+				</button>
 			</div>
-		</>
+			<div className="sidebar-section">
+				<p className="sidebar-category">PATIENTS</p>
+				<button className="nav-button btn btn-light">
+					<i className="fa-solid fa-hospital-user"></i>
+					<span>Queue</span>
+				</button>
+				<button className="nav-button btn btn-light">
+					<i className="fa-solid fa-id-card"></i>
+					<span>New</span>
+				</button>
+				<button className="nav-button btn btn-light">
+					<i className="fa-solid fa-hand-holding-medical"></i>
+					<span>Manage</span>
+				</button>
+			</div>
+		</div>
 	);
 };
 

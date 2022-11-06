@@ -17,10 +17,6 @@ export const ProductsRoute = {
 		jwt.verify(token, process.env.JWT_SEC, async (err, decoded) => {
 			if (err) return res.sendStatus(401).send("token tampered"); //if not verified
 
-			const { admin } = decoded; //get admin status
-
-			if (!admin) return res.sendStatus(403); //if not an admin
-
 			const result = await db.collection("products").find(); //retrieve products from DB
 
 			if (!result) return res.sendStatus(404); //if no products found

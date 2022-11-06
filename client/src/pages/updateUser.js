@@ -106,7 +106,7 @@ const UpdateUserPage = () => {
 								id="admin"
 								name="admin"
 								value={admin}
-								onChange={(e) => setAdmin(e.target.value)}
+								onChange={(e) => setAdmin(e.target.value === "true")}
 							>
 								<option value={true}>Yes</option>
 								<option value={false}>No</option>

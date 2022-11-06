@@ -1,3 +1,7 @@
+:root {
+  --green-color: #17fba1;
+}
+
 body {
   background-color: #FFFFFF;
   display: flex;
@@ -46,6 +50,63 @@ body {
 
 .errors {
   color: red;
+  font-weight: bold;
+}
+
+.form-feedback {
+  color: var(--success);
+  font-weight: bold;
+}
+
+.crud-card {
+  width: 50%;
+}
+
+.btn-group-crud-card {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-group-crud-card-vertical {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Page */
+
+.page {
+  position: fixed;
+  margin: 15vh 0vw 0 20vw;
+  width: calc(100vw - 24vw);
+  height: calc(100vh - 15vh);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  z-index: -1;
+}
+
+.page-heading {
+  color: gray;
+}
+
+.page-content-forms {
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-content {
+  display: flex;
+  gap: 5rem;
+  justify-content: center;
+}
+
+.page hr {
+  color: gray;
+  width: 100%;
+  border-width: 0.11rem;
 }
 
 /* Dashboard */
@@ -133,7 +194,6 @@ i {
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   border-radius: 0.2rem;
   padding: 1rem;
-  transition: all 0.5ms;
 }
 
 .user-adropdown-links {
@@ -201,23 +261,37 @@ i {
   width: 1.3rem;
 }
 
-/* Dashboard */
+/* Card */
 
-.dashboard-card {
+.card {
   background-color: white;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   border-radius: 0.2rem;
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  width: 20vw;
-  height: 40vh;
+  width: 15vw;
+  height: 30vh;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
 
-/* Card */
+i.add {
+  color: var(--primary);
+}
 
-.card-icon img {
-  width: 5rem;
+i.update {
+  color: var(--warning);
+}
+
+i.remove {
+  color: var(--danger);
+}
+
+/* Users Page */
+
+.users-table-actions {
+  display: flex;
+  gap: 1rem;
 }

@@ -1,0 +1,21 @@
+{
+  "name": "med-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/naveensatan/MedSys.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/naveensatan/MedSys/issues"
+  },
+  "homepage": "https://github.com/naveensatan/MedSys#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.27.1"
+  }
+}

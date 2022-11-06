@@ -1,16 +1,19 @@
 import React from "react";
+import { useNavigate } from "react-router";
 
 const Card = (props) => {
-	const title = props.title;
-	const icon = props.icon;
+	const heading = props.heading;
+	const iconClass = props.class;
+	const route = props.route;
+	const navigate = useNavigate();
 
 	return (
-		<div className="dashboard-card">
+		<div className="card" onClick={() => navigate(`${route}`)}>
 			<div className="card-icon">
-				<img src={icon} alt={`card icon for ${title}`} />
+				<i className={iconClass} />
 			</div>
-			<div className="card-title">
-				<h3>{title}</h3>
+			<div className="card-heading">
+				<h3>{heading}</h3>
 			</div>
 		</div>
 	);

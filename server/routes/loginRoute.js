@@ -14,13 +14,13 @@ export const LoginRoute = {
 			return res.sendStatus(401);
 		}
 
-		const { _id, username, email: Email, pswdHash, admin } = user;
+		const { id, username, email: Email, pswdHash, admin } = user;
 
 		const passwordMatch = await bcrypt.compare(password, pswdHash);
 
 		if (passwordMatch) {
 			jwt.sign(
-				{ _id, email: Email, username, admin },
+				{ id, email: Email, username, admin },
 				process.env.JWT_SEC,
 				{
 					expiresIn: "2d", //token expiry

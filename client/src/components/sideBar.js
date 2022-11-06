@@ -1,29 +1,45 @@
 import React from "react";
-// import { useState } from "react";
+import { useNavigate } from "react-router";
+import { useUser } from "./auth/useUser";
 
 const SideBar = () => {
-	// const [currentPage, switchPage] = useState("");
-	// const hostUrl = `http://localhost:3001/`;
-
-	// const pages = [`dashboard`, `stocks`, `reports`];
-
-	// console.log(window.location.href);
+	const navigate = useNavigate();
+	const user = useUser();
 
 	return (
 		<div className="sidebar">
 			<div className="sidebar-section">
 				<p className="sidebar-category">NAVIGATION</p>
-				<button className="nav-button btn btn-light">
+				<button
+					className="nav-button btn btn-light"
+					onClick={() => navigate("/")}
+				>
 					<i className="fa-solid fa-gauge-high"></i>
 					<span>Dashboard</span>
 				</button>
-				<button className="nav-button btn btn-light">
+				<button
+					className="nav-button btn btn-light"
+					onClick={() => navigate("/manage-stocks")}
+				>
 					<i className="fa-solid fa-prescription-bottle-medical"></i>
 					<span>Stocks</span>
 				</button>
 				<button className="nav-button btn btn-light">
 					<i className="fa-solid fa-microscope"></i>
 					<span>Reports</span>
+				</button>
+				<button
+					className="nav-button btn btn-light"
+					onClick={() => {
+						if (user.admin) {
+							return navigate("/users");
+						}
+
+						alert("Not authorized: Only an admin can view users!");
+					}}
+				>
+					<i className="fa-solid fa-users"></i>
+					<span>Users</span>
 				</button>
 			</div>
 			<div className="sidebar-section">

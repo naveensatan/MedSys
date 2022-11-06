@@ -22,11 +22,11 @@ export const SignUpRoute = {
 			.collection("users")
 			.insertOne({ username, email, pswdHash, admin: false });
 
-		const { insertedId } = result; //get auto-generated ID of new user
+		const { insertedId, admin } = result; //get auto-generated ID of new user
 
 		//sign JWT
 		jwt.sign(
-			{ id: insertedId, email, username },
+			{ id: insertedId, email, username, admin },
 			process.env.JWT_SEC,
 			{
 				expiresIn: "2d", //token expiry

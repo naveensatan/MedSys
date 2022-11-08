@@ -6,8 +6,15 @@ export const AddProductRoute = {
 	method: "post",
 	handler: async (req, res) => {
 		const { authorization } = req.headers;
-		const { productName, brandName, qty, dosage, manufacture, expiry } =
-			req.body; //get data from request body
+		const {
+			productName,
+			brandName,
+			qty,
+			dosage,
+			unitPrice,
+			manufacture,
+			expiry,
+		} = req.body; //get data from request body
 
 		//if no authorization header presented
 		if (!authorization) return res.sendStatus(401);
@@ -35,6 +42,7 @@ export const AddProductRoute = {
 				productName,
 				brandName,
 				qty,
+				unitPrice,
 				dosage,
 				manufacture,
 				expiry,

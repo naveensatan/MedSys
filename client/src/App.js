@@ -8,6 +8,7 @@ import ManageStocks from "./pages/manageStocks";
 import AddProduct from "./pages/addProduct";
 import UsersPage from "./pages/users";
 import UpdateUserPage from "./pages/updateUser";
+import PrescriptionPage from "./pages/prescription";
 import { PrivateRoutes } from "./components/auth/PrivateRoutes.js";
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -70,6 +71,17 @@ function App() {
 									<Topbar />
 									<SideBar />
 									<UpdateUserPage />
+								</>
+							}
+						></Route>
+						<Route
+							path="/prescription"
+							exact
+							element={
+								<>
+									<Topbar />
+									<SideBar />
+									<PrescriptionPage />
 								</>
 							}
 						></Route>

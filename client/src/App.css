@@ -76,9 +76,11 @@ body {
 
 .page {
   position: fixed;
-  margin: 15vh 0vw 0 20vw;
+  top: 15vh;
+  left: 20vw;
+  bottom: 0;
+  overflow-y: scroll;
   width: calc(100vw - 24vw);
-  height: calc(100vh - 15vh);
   text-align: left;
   display: flex;
   flex-direction: column;
@@ -92,13 +94,24 @@ body {
 .page-content-forms {
   display: flex;
   flex-direction: column;
-  gap: 5rem;
+  gap: 3rem;
   align-items: center;
   justify-content: center;
+  margin-bottom: 5vh;
 }
 
 .page-content {
   display: flex;
+  grid-gap: 5rem;
+  gap: 5rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.page-content-cards {
+  display: flex;
+  grid-gap: 5rem;
   gap: 5rem;
   justify-content: center;
 }

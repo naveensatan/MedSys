@@ -8,7 +8,7 @@ const ManageStocks = () => {
 				<h3>Manage Stocks</h3>
 			</div>
 			<hr />
-			<div className="page-content">
+			<div className="page-content-cards">
 				<Card
 					heading="Add Product"
 					class="fa-solid fa-plus add"

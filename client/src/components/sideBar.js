@@ -44,7 +44,16 @@ const SideBar = () => {
 			</div>
 			<div className="sidebar-section">
 				<p className="sidebar-category">DISPENSARY</p>
-				<button className="nav-button btn btn-light">
+				<button
+					className="nav-button btn btn-light"
+					onClick={() => {
+						if (user.admin) {
+							return navigate("/prescription");
+						}
+
+						alert("Not authorized: Only an admin can view users!");
+					}}
+				>
 					<i className="fa-solid fa-prescription"></i>
 					<span>Prescription</span>
 				</button>

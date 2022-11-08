@@ -1,19 +1,27 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useToken } from "../components/auth/useToken";
 import { useNavigate } from "react-router";
 import axios from "axios";
+import { Alert, Collapse, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 const AddProduct = () => {
+	const myRef = useRef();
+	const scrollToTop = () => {
+		myRef.current.scrollIntoView({ behavior: "smooth" });
+	};
 	const [product, setProduct] = useState("");
 	const [brand, setBrand] = useState("");
 	const [qty, setQty] = useState("");
+	const [unitPrice, setUnitPrice] = useState("");
 	const [dosage, setDosage] = useState("");
 	const [metric, setMetric] = useState("mg");
 	const [manuDate, setManuDate] = useState("");
 	const [expDate, setExpDate] = useState("");
 	const [error, setError] = useState(null);
 	const [feedback, setFeedback] = useState(null);
+	const [feedbackVisible, setFeedbackVisible] = useState(false);
 
 	const navigate = useNavigate();
 	const [token] = useToken();
@@ -21,13 +29,14 @@ const AddProduct = () => {
 	const onAddProduct = async () => {
 		setError(null);
 		setFeedback(null);
-		const response = await axios
+		await axios
 			.post(
 				"http://localhost:3000/api/add-product",
 				{
 					productName: product,
 					brandName: brand,
-					qty: qty,
+					qty: Number(qty),
+					unitPrice: Number(unitPrice),
 					dosage: `${dosage}${metric}`,
 					manufacture: manuDate,
 					expiry: expDate,
@@ -40,28 +49,67 @@ const AddProduct = () => {
 
 				if (err.response.status === 403 || 401)
 					return setError("You are not authorized to perform this action");
+			})
+			.then((response) => {
+				if (response) {
+					if (response.status === 200) {
+						return setFeedback("Product added successfully...");
+					}
+				}
 			});
-
-		if (response.status === 200)
-			return setFeedback("Product added successfully...");
+		setFeedbackVisible(true);
 	};
 
 	return (
 		<div className="page">
-			<div className="page-heading">
+			<div ref={myRef} className="page-heading">
 				<h3>Add Product</h3>
 			</div>
 			<hr />
 			<div className="page-content-forms">
-				{error ? (
-					<div className="errors">
-						<p>{error}</p>
-					</div>
-				) : null}
+				<Collapse in={feedbackVisible}>
+					{error ? (
+						<Alert
+							severity="error"
+							action={
+								<IconButton
+									aria-label="close"
+									color="inherit"
+									size="small"
+									onClick={() => {
+										setFeedbackVisible(false);
+									}}
+								>
+									<CloseIcon fontSize="inherit" />
+								</IconButton>
+							}
+							sx={{ mb: 2 }}
+						>
+							{error}
+						</Alert>
+					) : null}
+				</Collapse>
 				{feedback ? (
-					<div className="form-feedback">
-						<p>{feedback}</p>
-					</div>
+					<Collapse in={feedbackVisible}>
+						<Alert
+							severity="success"
+							action={
+								<IconButton
+									aria-label="close"
+									color="inherit"
+									size="small"
+									onClick={() => {
+										setFeedbackVisible(false);
+									}}
+								>
+									<CloseIcon fontSize="inherit" />
+								</IconButton>
+							}
+							sx={{ mb: 2 }}
+						>
+							{feedback}
+						</Alert>
+					</Collapse>
 				) : null}
 				<div className="crud-card">
 					<div className="crud-card-content">
@@ -75,7 +123,7 @@ const AddProduct = () => {
 								id="productName"
 								name="productName"
 								value={product}
-								onChange={(e) => setProduct(e.target.value)}
+								onChange={(e) => setProduct(e.target.value.trim())}
 							></input>
 						</div>
 						<div className="form-group">
@@ -88,7 +136,20 @@ const AddProduct = () => {
 								id="brandName"
 								name="brandName"
 								value={brand}
-								onChange={(e) => setBrand(e.target.value)}
+								onChange={(e) => setBrand(e.target.value.trim())}
+							></input>
+						</div>
+						<div className="form-group">
+							<label className="form-label" htmlFor="unitPrice">
+								Unit Price (Rs.)
+							</label>
+							<input
+								className="form-control"
+								type="number"
+								id="unitPrice"
+								name="unitPrice"
+								value={unitPrice}
+								onChange={(e) => setUnitPrice(e.target.value)}
 							></input>
 						</div>
 						<div className="form-group">
@@ -159,8 +220,18 @@ const AddProduct = () => {
 						<div className="btn-group-crud-card-vertical">
 							<button
 								className="btn btn-primary"
-								disabled={!product || !qty || !expDate || !dosage || !manuDate}
-								onClick={() => onAddProduct()}
+								disabled={
+									!product ||
+									!qty ||
+									!expDate ||
+									!dosage ||
+									!unitPrice ||
+									!manuDate
+								}
+								onClick={() => {
+									scrollToTop();
+									onAddProduct();
+								}}
 							>
 								Add
 							</button>

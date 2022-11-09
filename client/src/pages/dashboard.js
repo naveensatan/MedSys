@@ -5,6 +5,7 @@ import { useToken } from "../components/auth/useToken";
 
 const Dashboard = () => {
 	const [token] = useToken();
+	// eslint-disable-next-line
 	const [Products, setProducts] = useState(null);
 
 	useEffect(() => {
@@ -15,10 +16,10 @@ const Dashboard = () => {
 			.catch((err) => {
 				return alert(err);
 			})
-			.then((res) => setProducts(res.data));
+			.then((res) => {
+				res ? setProducts(res.data) : Error("No response from server");
+			});
 	}, [token]);
-
-	console.log(Products);
 
 	return (
 		<div className="page">

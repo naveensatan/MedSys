@@ -2,49 +2,27 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useToken } from "../components/auth/useToken";
 import axios from "axios";
-import TextField from "@mui/material/TextField";
-import { Autocomplete } from "@mui/material";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableContainer,
+	TableHead,
+	TableRow,
+	Paper,
+	Autocomplete,
+	TextField,
+	Button,
+	IconButton,
+} from "@mui/material";
+import DoneIcon from "@mui/icons-material/Done";
+import CloseIcon from "@mui/icons-material/Close";
 
 const PrescriptionPage = () => {
 	const [token] = useToken();
 	const [Products, setProducts] = useState(null);
-
-	const invoiceProducts = [
-		{
-			productName: `Amoxcilline`,
-			brandName: `Generic`,
-			qty: 10,
-			dosage: `1000mg`,
-			unit: 50,
-		},
-		{
-			productName: `Paracetomol`,
-			brandName: `Panadol`,
-			qty: 20,
-			dosage: `500mg`,
-			unit: 50,
-		},
-		{
-			productName: `Loratadine`,
-			brandName: `Generic`,
-			qty: 15,
-			dosage: `100mg`,
-			unit: 50,
-		},
-	];
-
-	const invoiceTotal = (productList) => {
-		return productList
-			.map(({ unit, qty }) => unit * qty)
-			.reduce((sum, i) => sum + i, 0);
-	};
+	const [tableRows, setTableRows] = useState([]);
+	const [invoiceProducts, setInvoiceProducts] = useState([]);
 
 	useEffect(() => {
 		axios
@@ -65,59 +43,150 @@ const PrescriptionPage = () => {
 			<hr />
 			<div className="page-content">
 				{Products ? (
-					<Autocomplete
-						disablePortal
-						id="combo-box-demo"
-						options={Products}
-						sx={{ width: 300 }}
-						getOptionLabel={(option) => option.productName}
-						renderInput={(params) => (
-							<TextField {...params} label="Search Product" />
-						)}
-					></Autocomplete>
-				) : null}
-				<TableContainer component={Paper}>
-					<Table sx={{ minWidth: 700 }} aria-label="spanning table">
-						<TableHead>
-							<TableRow>
-								<TableCell align="center" colSpan={4}>
-									Details
-								</TableCell>
-								<TableCell align="right">Price</TableCell>
-							</TableRow>
-							<TableRow>
-								<TableCell>Desc</TableCell>
-								<TableCell align="right">Qty.</TableCell>
-								<TableCell align="right">Dosage</TableCell>
-								<TableCell align="right">Unit Price</TableCell>
-								<TableCell align="right">Sum</TableCell>
-							</TableRow>
-						</TableHead>
-						<TableBody>
-							{invoiceProducts.map((product) => (
-								<TableRow key={product.productName}>
-									<TableCell>{product.productName}</TableCell>
-									<TableCell align="right">{product.qty}</TableCell>
-									<TableCell align="right">{product.dosage}</TableCell>
-									<TableCell align="right">{product.unit}</TableCell>
-									<TableCell align="right">
-										{product.unit * product.qty}
-									</TableCell>
-								</TableRow>
-							))}
-
-							<TableRow>
-								<TableCell colSpan={4}>Total</TableCell>
-								<TableCell align="right">
-									{invoiceTotal(invoiceProducts)}
-								</TableCell>
-							</TableRow>
-						</TableBody>
-					</Table>
-				</TableContainer>
+					<>
+						<TableContainer component={Paper}>
+							<Table sx={{ minWidth: 700 }} aria-label="spanning table">
+								<TableHead>
+									<TableRow>
+										<TableCell align="center">Desc</TableCell>
+										<TableCell align="center">Dosage</TableCell>
+										<TableCell align="center">Qty.</TableCell>
+										<TableCell align="center">Unit Price (Rs.)</TableCell>
+										<TableCell align="center">Sum (Rs.)</TableCell>
+									</TableRow>
+								</TableHead>
+								<TableBody>
+									{tableRows.map((row, i) => {
+										return (
+											<TableRow data-key={i} key={i}>
+												{row}
+											</TableRow>
+										);
+									})}
+									<TableRow>
+										<TableCell align="center" colSpan={5}>
+											<Button
+												variant="contained"
+												onClick={() => {
+													setTableRows((currentRows) => [
+														<AddView Products={Products} Rows={tableRows} />,
+														...currentRows,
+													]);
+												}}
+											>
+												Add
+											</Button>
+										</TableCell>
+									</TableRow>
+								</TableBody>
+							</Table>
+						</TableContainer>
+					</>
+				) : (
+					<h3>Loading...</h3>
+				)}
 			</div>
 		</div>
 	);
+};
+
+const AddView = ({ Products }, Rows) => {
+	const [selectedProductName, setSelectedProductName] = useState(null);
+	const [selectedDosage, setSelectedDosage] = useState(null);
+	const [selectedProductObject, setSelectedProductObject] = useState({});
+	const [givenQty, setGivenQty] = useState(null);
+	const [sum, setSum] = useState(0);
+
+	useEffect(() => {
+		if (selectedProductName === null) return;
+
+		const found = Products.find((p) => p.productName === selectedProductName);
+		setSelectedProductObject(found);
+	}, [selectedProductName]);
+
+	useEffect(() => {
+		if (selectedProductName === null || givenQty === null) return;
+
+		setSum(
+			(Number(selectedProductObject.unitPrice) * Number(givenQty)).toFixed(2)
+		);
+	}, [selectedProductName, givenQty]);
+
+	return (
+		<>
+			<TableCell align="center">
+				<Autocomplete
+					disablePortal
+					id="combo-box-demo"
+					options={Products.map((product) => product.productName)}
+					sx={{ width: 200 }}
+					renderInput={(params) => <TextField {...params} label="Product" />}
+					onInputChange={(event, value) => setSelectedProductName(value)}
+				/>
+			</TableCell>
+			<TableCell align="center">
+				{selectedProductName && (
+					<Autocomplete
+						disablePortal
+						id="combo-box-demo"
+						options={Array.of(selectedProductObject.dosage)}
+						sx={{ width: 100 }}
+						onInputChange={(event, value) => setSelectedDosage(value)}
+						renderInput={(params) => <TextField {...params} label="Dosage" />}
+					/>
+				)}
+			</TableCell>
+			<TableCell align="center">
+				{selectedProductName && (
+					<TextField
+						sx={{ width: 100 }}
+						id="outlined-number"
+						label="Qty"
+						type="number"
+						InputLabelProps={{
+							shrink: true,
+						}}
+						onChange={(event) => setGivenQty(event.target.value)}
+					/>
+				)}
+			</TableCell>
+			<TableCell align="center">
+				{selectedProductName &&
+					Number(selectedProductObject.unitPrice).toFixed(2)}
+			</TableCell>
+			<TableCell align="center">
+				{selectedProductName && givenQty && sum}
+			</TableCell>
+			<TableCell>
+				<IconButton
+					aria-label="done"
+					size="medium"
+					color="success"
+					disabled={!selectedProductName || !selectedDosage || !givenQty}
+				>
+					<DoneIcon fontSize="inherit" color="success"></DoneIcon>
+				</IconButton>
+				<IconButton
+					aria-label="close"
+					size="medium"
+					color="error"
+					onClick={(event) => {
+						let idx = event.currentTarget.parentNode.parentNode.getAttribute(
+							"data-key"
+						);
+						console.log(Rows);
+						removeRow(Rows, idx);
+					}}
+				>
+					<CloseIcon fontSize="inherit" color="error"></CloseIcon>
+				</IconButton>
+			</TableCell>
+		</>
+	);
+};
+
+const removeRow = (rows, index) => {
+	rows.slice(index, 1);
 };
 
 export default PrescriptionPage;

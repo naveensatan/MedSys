@@ -15,9 +15,11 @@ import {
 	Button,
 	IconButton,
 	Stack,
+	Popover,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
+import DoneIcon from "@mui/icons-material/Done";
 import { randomId } from "@mui/x-data-grid-generator";
 
 const PrescriptionPage = () => {
@@ -56,82 +58,123 @@ const PrescriptionPage = () => {
 		setSelectedProductObject(obj);
 	}, [selectedProductName]);
 
+	//////////////
+	const [anchorEl, setAnchorEl] = useState(null);
+
+	const handleClick = (event) => {
+		setAnchorEl(event.currentTarget);
+	};
+
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
+	const open = Boolean(anchorEl);
+	const id = open ? "simple-popover" : undefined;
+
+	///////////////
+
 	return (
 		<div className="page">
 			<div className="page-heading">
 				<h3>Prescription</h3>
 			</div>
 			<hr />
-			<div className="page-content">
+			<div className="page-content" style={{ gap: "1em" }}>
 				{Products ? (
 					<>
-						<Stack
-							spacing={2}
-							sx={{
-								backgroundColor: "#d4d3d333",
-								padding: "2rem",
-								borderRadius: "1rem",
-							}}
-						>
-							<Autocomplete
-								disablePortal
-								size="small"
-								id="combo-box-demo"
-								options={Products.map((product) => product.productName)}
-								sx={{ width: 200 }}
-								renderInput={(params) => (
-									<TextField {...params} label="Choose product" />
-								)}
-								onChange={(e, value) => setSelectedProductName(value)}
-							/>
-							<>
-								<Autocomplete
-									disablePortal
-									disabled={!selectedProductName}
-									size="small"
-									id="combo-box-demo"
-									options={Array.of(selectedProductObject.dosage)}
-									sx={{ width: 200 }}
-									renderInput={(params) => (
-										<TextField {...params} label="Choose dosage" />
-									)}
-									onChange={(e, value) => setSelectedDosage(value)}
-								/>
-								<TextField
-									label={"Qty"}
-									type={"number"}
-									required
-									variant="standard"
-									disabled={!selectedProductName || !selectedDosage}
-									onChange={(e) => setGivenQty(e.target.value)}
-								></TextField>
-							</>
-
+						<div className="prescription-addButton">
 							<Button
+								aria-describedby={id}
 								variant="contained"
-								color="success"
-								size="medium"
-								disabled={
-									!selectedProductName || !selectedDosage || givenQty < 1
-								}
-								sx={{ width: "50%", alignSelf: "center" }}
-								onClick={() => {
-									setRow((currentRows) => [
-										...currentRows,
-										{
-											id: randomId(),
-											productName: selectedProductObject.productName,
-											dosage: selectedDosage,
-											qty: givenQty,
-											unitPrice: selectedProductObject.unitPrice,
-											sum: calcSum(selectedProductObject.unitPrice, givenQty),
-										},
-									]);
+								onClick={handleClick}
+							>
+								Add Product
+							</Button>
+							<Popover
+								id={id}
+								open={open}
+								anchorEl={anchorEl}
+								onClose={handleClose}
+								anchorOrigin={{
+									vertical: "bottom",
+									horizontal: "center",
 								}}
 							>
-								Add
-							</Button>
-						</Stack>
+								{
+									<Stack
+										spacing={2}
+										sx={{
+											padding: "2rem",
+											borderRadius: "1rem",
+										}}
+									>
+										<Autocomplete
+											disablePortal
+											size="small"
+											id="combo-box-demo"
+											options={Products.map((product) => product.productName)}
+											sx={{ width: 200 }}
+											renderInput={(params) => (
+												<TextField {...params} label="Choose product" />
+											)}
+											onChange={(e, value) => setSelectedProductName(value)}
+										/>
+										<>
+											<Autocomplete
+												disablePortal
+												disabled={!selectedProductName}
+												size="small"
+												id="combo-box-demo"
+												options={Array.of(selectedProductObject.dosage)}
+												sx={{ width: 200 }}
+												renderInput={(params) => (
+													<TextField {...params} label="Choose dosage" />
+												)}
+												onChange={(e, value) => setSelectedDosage(value)}
+											/>
+											<TextField
+												label={"Qty"}
+												type={"number"}
+												required
+												variant="standard"
+												disabled={!selectedProductName || !selectedDosage}
+												onChange={(e) => setGivenQty(e.target.value)}
+											></TextField>
+										</>
+
+										<IconButton
+											variant="contained"
+											color="success"
+											size="large"
+											disabled={
+												!selectedProductName || !selectedDosage || givenQty < 1
+											}
+											sx={{ width: "30%", alignSelf: "center" }}
+											onClick={() => {
+												setRow((currentRows) => [
+													...currentRows,
+													{
+														id: randomId(),
+														productName: selectedProductObject.productName,
+														dosage: selectedDosage,
+														qty: givenQty,
+														unitPrice: selectedProductObject.unitPrice,
+														sum: calcSum(
+															selectedProductObject.unitPrice,
+															givenQty
+														),
+													},
+												]);
+												handleClose();
+											}}
+										>
+											<DoneIcon fontSize="large"></DoneIcon>
+										</IconButton>
+									</Stack>
+								}
+							</Popover>
+						</div>
 						<TableContainer component={Paper}>
 							<Table sx={{ minWidth: 700 }} aria-label="spanning table">
 								<TableHead>

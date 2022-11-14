@@ -10,7 +10,7 @@ export const AddProductRoute = {
 			productName,
 			brandName,
 			qty,
-			dosage,
+			strength,
 			unitPrice,
 			manufacture,
 			expiry,
@@ -30,7 +30,9 @@ export const AddProductRoute = {
 
 			if (!admin) return res.sendStatus(403); //if not an admin
 
-			const product = await db.collection("products").findOne({ productName }); //retrieve product from DB
+			const product = await db
+				.collection("products")
+				.findOne({ productName, strength }); //retrieve product from Db
 
 			if (product) {
 				//if a product already exists
@@ -43,7 +45,7 @@ export const AddProductRoute = {
 				brandName,
 				qty,
 				unitPrice,
-				dosage,
+				strength,
 				manufacture,
 				expiry,
 			});

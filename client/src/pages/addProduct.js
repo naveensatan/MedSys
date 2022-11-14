@@ -15,7 +15,7 @@ const AddProduct = () => {
 	const [brand, setBrand] = useState("");
 	const [qty, setQty] = useState("");
 	const [unitPrice, setUnitPrice] = useState("");
-	const [dosage, setDosage] = useState("");
+	const [strength, setStrength] = useState("");
 	const [metric, setMetric] = useState("mg");
 	const [manuDate, setManuDate] = useState("");
 	const [expDate, setExpDate] = useState("");
@@ -33,11 +33,11 @@ const AddProduct = () => {
 			.post(
 				"http://localhost:3000/api/add-product",
 				{
-					productName: product,
-					brandName: brand,
+					productName: `${product.trim()} (${strength.trim()}${metric})`,
+					brandName: brand.trim(),
 					qty: Number(qty),
 					unitPrice: Number(unitPrice),
-					dosage: `${dosage}${metric}`,
+					strength: `${strength.trim()}${metric}`,
 					manufacture: manuDate,
 					expiry: expDate,
 				},
@@ -123,7 +123,7 @@ const AddProduct = () => {
 								id="productName"
 								name="productName"
 								value={product}
-								onChange={(e) => setProduct(e.target.value.trim())}
+								onChange={(e) => setProduct(e.target.value)}
 							></input>
 						</div>
 						<div className="form-group">
@@ -136,7 +136,7 @@ const AddProduct = () => {
 								id="brandName"
 								name="brandName"
 								value={brand}
-								onChange={(e) => setBrand(e.target.value.trim())}
+								onChange={(e) => setBrand(e.target.value)}
 							></input>
 						</div>
 						<div className="form-group">
@@ -146,6 +146,7 @@ const AddProduct = () => {
 							<input
 								className="form-control"
 								type="number"
+								step="any"
 								id="unitPrice"
 								name="unitPrice"
 								value={unitPrice}
@@ -166,17 +167,17 @@ const AddProduct = () => {
 							></input>
 						</div>
 						<div className="form-group">
-							<label className="form-label" htmlFor="dosage">
-								Dosage
+							<label className="form-label" htmlFor="strength">
+								Strength
 							</label>
 							<div className="input-group">
 								<input
 									className="form-control"
 									type="number"
-									id="dosage"
-									name="dosage"
-									value={dosage}
-									onChange={(e) => setDosage(e.target.value)}
+									id="strength"
+									name="strength"
+									value={strength}
+									onChange={(e) => setStrength(e.target.value)}
 								></input>
 								<select
 									name="metric"
@@ -185,7 +186,7 @@ const AddProduct = () => {
 									<option value="mg" default>
 										mg
 									</option>
-									<option value="mg">ml</option>
+									<option value="ml">ml</option>
 								</select>
 							</div>
 						</div>
@@ -224,7 +225,7 @@ const AddProduct = () => {
 									!product ||
 									!qty ||
 									!expDate ||
-									!dosage ||
+									!strength ||
 									!unitPrice ||
 									!manuDate
 								}

@@ -39,11 +39,30 @@ const PrescriptionPage = () => {
 		setRow(updatedRows);
 	};
 
-	const handleEdit = (rowId) => {
+	const handleEditToggle = (rowId) => {
 		let currentRows = [...rows];
 		let rowEditIdx = currentRows.findIndex((v) => v.id === rowId);
 		let rowEditObj = { ...currentRows[rowEditIdx] };
 		rowEditObj.isEditing = true;
+		currentRows[rowEditIdx] = rowEditObj;
+		setRow(currentRows);
+	};
+
+	const handleEditConfirm = (rowId) => {
+		let currentRows = [...rows];
+		let rowEditIdx = currentRows.findIndex((v) => v.id === rowId);
+		let rowEditObj = { ...currentRows[rowEditIdx] };
+		rowEditObj.isEditing = false;
+		currentRows[rowEditIdx] = rowEditObj;
+		setRow(currentRows);
+	};
+
+	const handleEdit = (rowId, newQty) => {
+		let currentRows = [...rows];
+		let rowEditIdx = currentRows.findIndex((v) => v.id === rowId);
+		let rowEditObj = { ...currentRows[rowEditIdx] };
+		rowEditObj.qty = newQty;
+		rowEditObj.sum = calcSum(rowEditObj.unitPrice, newQty);
 		currentRows[rowEditIdx] = rowEditObj;
 		setRow(currentRows);
 	};
@@ -208,7 +227,13 @@ const PrescriptionPage = () => {
 													<TableCell align="center">{row.dosage}</TableCell>
 													{row.isEditing ? (
 														<TableCell align="center">
-															<TextField type={"number"}></TextField>
+															<TextField
+																defaultValue={row.qty}
+																type={"number"}
+																onChange={(e) =>
+																	handleEdit(row.id, e.target.value)
+																}
+															></TextField>
 														</TableCell>
 													) : (
 														<TableCell align="center">{row.qty}</TableCell>
@@ -218,11 +243,15 @@ const PrescriptionPage = () => {
 													<TableCell align="center">{row.sum}</TableCell>
 													<TableCell align="center">
 														{row.isEditing ? (
-															<IconButton>
+															<IconButton
+																onClick={() => handleEditConfirm(row.id)}
+															>
 																<DoneIcon></DoneIcon>
 															</IconButton>
 														) : (
-															<IconButton onClick={() => handleEdit(row.id)}>
+															<IconButton
+																onClick={() => handleEditToggle(row.id)}
+															>
 																<EditIcon></EditIcon>
 															</IconButton>
 														)}

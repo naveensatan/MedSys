@@ -15,7 +15,7 @@ export const ProductsRoute = {
 
 		//verify JWT
 		jwt.verify(token, process.env.JWT_SEC, async (err, decoded) => {
-			if (err) return res.sendStatus(401).send("token tampered"); //if not verified
+			if (err) return res.status(401).send("token tampered"); //if not verified
 
 			const result = await db.collection("products").find(); //retrieve products from DB
 

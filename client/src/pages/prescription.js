@@ -17,6 +17,8 @@ import {
 	IconButton,
 	Stack,
 	Popover,
+	Alert,
+	Collapse,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
@@ -31,6 +33,8 @@ const PrescriptionPage = () => {
 	const [selectedProductObject, setSelectedProductObject] = useState({});
 	const [givenQty, setGivenQty] = useState(0);
 	const [rows, setRow] = useState([]);
+	const [feedback, setFeedback] = useState(null);
+	const [feedbackVisible, setFeedbackVisible] = useState(false);
 
 	//handle table row cancel
 	const handleCancel = (rowId) => {
@@ -93,7 +97,7 @@ const PrescriptionPage = () => {
 				}
 			})
 			.then((res) => res && setProducts(res.data));
-	}, [token]);
+	}, [navigate, token]);
 
 	//set SelectedProductObject everytime the selected product name changes
 	useEffect(() => {
@@ -102,7 +106,7 @@ const PrescriptionPage = () => {
 			(product) => product.productName === selectedProductName
 		);
 		setSelectedProductObject(obj);
-	}, [selectedProductName]);
+	}, [Products, selectedProductName]);
 
 	//////Popover////////
 	const [anchorEl, setAnchorEl] = useState(null);
@@ -120,14 +124,53 @@ const PrescriptionPage = () => {
 
 	/////////////////////
 
-	const onConfirmOrder = () => {
+	const onConfirmOrder = async () => {
 		const order = {
-			items: [
-				{ productName: "name", qty: 0 },
-				{ productName: "name2", qty: 0 },
-			],
-			total: 0,
+			items: rows.map((row) => {
+				return {
+					productName: row.productName,
+					qty: row.qty,
+				};
+			}),
+			total: calcTotal(rows),
+			date: new Date().toLocaleString("en-LK"),
 		};
+		await axios
+			.post(
+				"/api/sales/confirm",
+				{
+					...order,
+				},
+				{ headers: { authorization: `Bearer ${token}` } }
+			)
+			.catch((err) => {
+				throw err;
+			})
+			.then((response) => {
+				if (response.status === 401 || response.status === 403) {
+					setFeedbackVisible(true);
+					setFeedback({
+						severity: "error",
+						message: "Transaction Unauthorized",
+					});
+					return;
+				}
+
+				if (response.status === 424) {
+					setFeedbackVisible(true);
+					setFeedback({
+						severity: "error",
+						message: "Database transaction failed",
+					});
+					return;
+				}
+
+				setFeedbackVisible(true);
+				setFeedback({
+					severity: "success",
+					message: "Transaction Successful",
+				});
+			});
 	};
 
 	return (
@@ -139,6 +182,28 @@ const PrescriptionPage = () => {
 			<div className="page-content" style={{ gap: "1em" }}>
 				{Products ? (
 					<>
+						{feedback && (
+							<Collapse in={feedbackVisible}>
+								<Alert
+									severity={feedback.severity}
+									action={
+										<IconButton
+											aria-label="close"
+											color="inherit"
+											size="small"
+											onClick={() => {
+												setFeedbackVisible(false);
+											}}
+										>
+											<CloseIcon fontSize="inherit" />
+										</IconButton>
+									}
+									sx={{ mb: 2 }}
+								>
+									{feedback.message}
+								</Alert>
+							</Collapse>
+						)}
 						<div className="prescription-addButton">
 							<Button
 								aria-describedby={id}
@@ -302,7 +367,11 @@ const PrescriptionPage = () => {
 									</Table>
 								</TableContainer>
 								<div className="btn-group-horizontal">
-									<Button variant="contained" color="success">
+									<Button
+										variant="contained"
+										color="success"
+										onClick={() => onConfirmOrder()}
+									>
 										Confirm
 									</Button>
 									<Button

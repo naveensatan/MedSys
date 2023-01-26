@@ -6,6 +6,8 @@ import { DeleteUserRoute } from "./deleteUserRoute.js";
 import { GetUserRoute } from "./getUserRoute.js";
 import { UpdateUserRoute } from "./updateUserRoute.js";
 import { ProductsRoute } from "./productsRoute.js";
+import { completeSaleRoute } from "./completeSaleRoute.js";
+import { GetSalesRoute } from "./getSalesRoute.js";
 
 export const Routes = [
 	SignUpRoute,
@@ -16,4 +18,6 @@ export const Routes = [
 	DeleteUserRoute,
 	GetUserRoute,
 	UpdateUserRoute,
+	completeSaleRoute,
+	GetSalesRoute,
 ];

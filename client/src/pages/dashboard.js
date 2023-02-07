@@ -12,6 +12,7 @@ const Dashboard = () => {
 	const [token] = useToken();
 	// eslint-disable-next-line
 	const [Products, setProducts] = useState(null);
+	// eslint-disable-next-line
 	const [Sales, setSales] = useState(null);
 	const [pieData, setPieData] = useState(undefined);
 
@@ -76,7 +77,7 @@ const Dashboard = () => {
 					setPieData(chartData);
 				});
 			});
-	}, [navigate, token]);
+	}, [Products, navigate, token]);
 
 	return (
 		<div className="page">
